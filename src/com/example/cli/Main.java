@@ -3,6 +3,8 @@ package com.example.cli;
 import static java.lang.StringTemplate.STR;
 
 import com.example.application.AppService;
+import com.example.infrastructure.TaskStorage;
+
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -10,7 +12,7 @@ public class Main {
 
   private static final Scanner sc = new Scanner(System.in);
 
-  private static final AppService app = new AppService();
+  private static final AppService app = new AppService(new TaskStorage());
 
   public static void main(String[] args) {
     while (true) {

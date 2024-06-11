@@ -8,33 +8,37 @@ import java.util.UUID;
 
 public class AppService {
 
-  private final TaskStorage repo = new TaskStorage();
+  private final TaskStorage taskStorage;
+
+  public AppService(final TaskStorage taskStorage) {
+    this.taskStorage = taskStorage;
+  }
 
   public List<Task> list() {
-    return repo.readAll();
+    return taskStorage.readAll();
   }
 
   public void create(final String name) {
     final var task = new Task(UUID.randomUUID(), name, Status.TODO);
-    repo.create(task);
+    taskStorage.create(task);
   }
 
   public void start(final UUID id) {
-    final var task = repo.readOne(id);
+    final var task = taskStorage.readOne(id);
     final var newTask = task.start();
-    repo.update(id, newTask);
+    taskStorage.update(id, newTask);
   }
 
   public void close(final UUID id) {
-    final var task = repo.readOne(id);
+    final var task = taskStorage.readOne(id);
     final var newTask = task.close();
-    repo.update(id, newTask);
+    taskStorage.update(id, newTask);
   }
 
   public void complete(final UUID id) {
-    final var task = repo.readOne(id);
+    final var task = taskStorage.readOne(id);
     final var newTask = task.complete();
-    repo.update(id, newTask);
+    taskStorage.update(id, newTask);
   }
 
 }
