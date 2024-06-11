@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class TodoRepository {
+public class TaskStorage {
 
   private final Map<UUID, Task> store = new HashMap<>();
 

@@ -2,13 +2,13 @@ package com.example.application;
 
 import com.example.domain.valueobject.Status;
 import com.example.domain.entity.Task;
-import com.example.infrastructure.TodoRepository;
+import com.example.infrastructure.TaskStorage;
 import java.util.List;
 import java.util.UUID;
 
 public class AppService {
 
-  private final TodoRepository repo = new TodoRepository();
+  private final TaskStorage repo = new TaskStorage();
 
   public List<Task> list() {
     return repo.readAll();
