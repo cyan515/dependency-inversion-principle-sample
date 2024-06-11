@@ -33,9 +33,9 @@ https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
 
 ```mermaid
 classDiagram
-namespace infrastracture {
+namespace infrastructure {
   class Main
-  class TodoRepository
+  class TaskStorage
 }
 namespace application {
   class AppService
@@ -45,9 +45,9 @@ namespace domain {
   class Status
 }
 AppService --> Task
-AppService --> TodoRepository
+AppService --> TaskStorage
 Main --> AppService
-TodoRepository --> Task
+TaskStorage --> Task
 Task --> Status
 ```
 
@@ -59,15 +59,15 @@ Task --> Status
 
 # まず DI してみる
 
-`AppService` が field に `TodoRepository` を直接持っており、インスタンス化も `AppService` 内でやっている。これは確かに依存度が高そうだ。
+`AppService` が field に `TaskStorage` を直接持っており、インスタンス化も `AppService` 内でやっている。これは確かに依存度が高そうだ。
 
 依存する部品を直接持たないようにするにはどうしたらよいだろうか？これは調べると DI（依存性の注入） が出てくる。なるほど。やってみよう。
 
 `di` branch
 
 ……変わって無くない？うん、まあこの時点ではそんなに変わらない。クラス図も前掲のものと変わらず、やはり application 層が infrastructure 層に依存している。
-強いて言えば、`AppService` の単体テストがやりやすくなる。DI する前は強制的に `TodoRepository` を使わされていたが、DI 後のソースコードではコンストラクタで `TodoRepository` を継承した任意のクラスを注入することができるようになった。
-`TodoRepository` の差し替えをする際に、reflection して mock するとか、mock library を使うとか、そういうことをしなくてよくなったのだ。
+強いて言えば、`AppService` の単体テストがやりやすくなる。DI する前は強制的に `TaskStorage` を使わされていたが、DI 後のソースコードではコンストラクタで `TaskStorage` を継承した任意のクラスを注入することができるようになった。
+`TaskStorage` の差し替えをする際に、reflection して mock するとか、mock library を使うとか、そういうことをしなくてよくなったのだ。
 
 しかし前述の通り依存の方向はこのままではマズい。これだけでは足りないということだ。文字通り「依存関係を逆転」させることができれば解決するのだが……。
 
@@ -86,9 +86,9 @@ Task --> Status
 
 ```mermaid
 classDiagram
-namespace infrastracture {
+namespace infrastructure {
   class Main
-  class TodoRepository
+  class TaskStorage
 }
 namespace application {
   class AppService
@@ -96,13 +96,13 @@ namespace application {
 namespace domain {
   class Task
   class Status
-  class ITodoRepository
+  class ITaskRepository
 }
-TodoRepository ..|> ITodoRepository
+TaskStorage ..|> ITaskRepository
 AppService --> Task
-AppService --> ITodoRepository
+AppService --> ITaskRepository
 Main --> AppService
-TodoRepository --> Task
+TaskStorage --> Task
 Task --> Status
 ```
 
